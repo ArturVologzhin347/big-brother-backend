@@ -10,10 +10,10 @@ CREATE TABLE IF NOT EXISTS card
 
 CREATE TABLE IF NOT EXISTS event
 (
-    id         BIGSERIAL PRIMARY KEY,
-    type       VARCHAR(64) NOT NULL,
+    id        BIGSERIAL PRIMARY KEY,
+    type      VARCHAR(64) NOT NULL,
     timestamp TIMESTAMP   NOT NULL,
-    card_id    BIGSERIAL   NOT NULL,
+    card_id   BIGSERIAL   NOT NULL,
     FOREIGN KEY (card_id) REFERENCES card (id) ON DELETE CASCADE
 );
 

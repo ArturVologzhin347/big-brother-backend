@@ -18,6 +18,7 @@ class SkudServiceImpl(
 
         logger.info(event.toString())
 
+
         /*
         TODO
         - Handle notifications

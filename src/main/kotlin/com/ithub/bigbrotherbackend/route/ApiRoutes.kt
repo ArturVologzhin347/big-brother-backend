@@ -15,7 +15,6 @@ class ApiRoutes(
     private val cardHandler: CardHandler
 ) {
 
-
     @Bean
     fun route() = coRouter {
         (accept(MediaType.APPLICATION_JSON) and "api/").nest {
@@ -29,7 +28,7 @@ class ApiRoutes(
             }
 
             "skud/".nest {
-                POST("", crudHandler::hanldeSkudEvent)
+                POST("", crudHandler::handleSkudEvent)
             }
         }
     }

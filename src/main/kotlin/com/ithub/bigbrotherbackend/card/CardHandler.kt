@@ -11,7 +11,7 @@ class CardHandler(
     suspend fun createNewCard(request: ServerRequest): ServerResponse {
         val body = request.awaitBody<BodyNewCard>()
 
-        val card =cardService.createCard(Card(number = body.number))
+        val card = cardService.createCard(Card(number = body.number))
 
         return ServerResponse
             .ok()

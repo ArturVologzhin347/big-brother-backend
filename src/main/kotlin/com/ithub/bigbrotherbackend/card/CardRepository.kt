@@ -8,7 +8,6 @@ import org.springframework.stereotype.Repository
 @Repository
 interface CardRepository : CoroutineCrudRepository<Card, Long> {
 
-
     @Query("SELECT * FROM card WHERE number=:number")
      fun findOneByNumber(number: String): Flow<Card?>
 

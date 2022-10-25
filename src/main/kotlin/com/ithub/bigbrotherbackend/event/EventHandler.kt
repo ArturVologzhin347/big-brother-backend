@@ -14,7 +14,6 @@ class EventHandler(
 
     suspend fun queryAllBy(request: ServerRequest): ServerResponse {
         return try {
-
             val limit = request.queryParam("limit").toKtNullable()?.toInt()
             val offset = request.queryParam("offset").toKtNullable()?.toInt()
 
