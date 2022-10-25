@@ -25,7 +25,7 @@ class DatabaseConfig {
     fun initializer(databaseClient: DatabaseClient, connectionFactory: ConnectionFactory) =
         ConnectionFactoryInitializer().apply {
             setConnectionFactory(connectionFactory)
-            setDatabasePopulator(ResourceDatabasePopulator(ClassPathResource("schema.sql")))
+            setDatabasePopulator(ResourceDatabasePopulator(ClassPathResource("sql/schema.sql")))
         }
 
 }
