@@ -12,8 +12,6 @@ fun main(args: Array<String>) {
     initializeBeans()
 }
 
-
 private fun initializeBeans() = beans {
 
 }
-

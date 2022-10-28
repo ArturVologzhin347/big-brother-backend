@@ -1,8 +1,11 @@
 package com.ithub.bigbrotherbackend.db
 
+import com.ithub.bigbrotherbackend.Profiles
+import com.ithub.bigbrotherbackend.util.setPopulatorFromResources
 import io.r2dbc.spi.ConnectionFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Profile
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer
@@ -22,10 +25,32 @@ class DatabaseConfig {
     }.build()
 
     @Bean
-    fun initializer(databaseClient: DatabaseClient, connectionFactory: ConnectionFactory) =
+    @Profile(Profiles.DEV)
+    fun initializeDev(databaseClient: DatabaseClient, connectionFactory: ConnectionFactory) =
         ConnectionFactoryInitializer().apply {
             setConnectionFactory(connectionFactory)
-            setDatabasePopulator(ResourceDatabasePopulator(ClassPathResource("sql/schema.sql")))
+            setPopulatorFromResources(
+                PATH_DROP, // TODO delete path to drop public databases
+                PATH_SCHEMA,
+                PATH_DATA
+            )
         }
 
+
+    @Bean(Profiles.PROD)
+    fun initializeProd(databaseClient: DatabaseClient, connectionFactory: ConnectionFactory) =
+        ConnectionFactoryInitializer().apply {
+            setConnectionFactory(connectionFactory)
+            setPopulatorFromResources(PATH_SCHEMA)
+        }
+
+
+    companion object {
+        private const val PATH_SQL = "sql"
+
+        private const val PATH_SCHEMA = "$PATH_SQL/schema.sql"
+        private const val PATH_DATA = "$PATH_SQL/data.sql"
+        private const val PATH_DROP = "$PATH_SQL/drop.sql"
+
+    }
 }
