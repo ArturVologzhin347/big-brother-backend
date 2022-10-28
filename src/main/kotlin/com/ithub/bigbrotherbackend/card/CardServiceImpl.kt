@@ -1,14 +1,16 @@
 package com.ithub.bigbrotherbackend.card
 
+import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 
 @Service
 class CardServiceImpl(
-    val cardRepository: CardRepository
-) : CardService {
+    private val cardRepository: CardRepository
+): CardService {
 
-    override suspend fun createCard(card: Card): Card {
-        return cardRepository.save(card)
+    override suspend fun findAllCards(): Flow<Card> {
+        return cardRepository.findAll()
     }
+
 
 }

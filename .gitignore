@@ -1,5 +1,6 @@
 dev
 logs.log
+src/main/resources/application-dev.properties
 
 HELP.md
 .gradle

@@ -1,4 +1,4 @@
-package com.ithub.bigbrotherbackend.event
+package com.ithub.bigbrotherbackend.event.scud.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
@@ -13,7 +13,7 @@ data class Event(
     private val _id: Long? = null,
 
     @Column("type")
-    val type: EventType = EventType.ENTER,
+    val type: Type = Type.ENTER,
 
     @Column("timestamp")
     val timestamp: LocalDateTime = LocalDateTime.now(),
@@ -24,5 +24,10 @@ data class Event(
 ) {
 
     fun id() = checkNotNull(_id)
+
+    enum class Type {
+        ENTER,
+        EXIT
+    }
 
 }

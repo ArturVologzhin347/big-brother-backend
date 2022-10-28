@@ -1,33 +1,32 @@
 package com.ithub.bigbrotherbackend.event
 
-import com.ithub.bigbrotherbackend.util.toKtNullable
-import org.springframework.stereotype.Component
-import org.springframework.web.reactive.function.server.ServerRequest
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.bodyAndAwait
-import org.springframework.web.reactive.function.server.bodyValueAndAwait
+import com.ithub.bigbrotherbackend.event.scud.model.RawEvent
+import com.ithub.bigbrotherbackend.event.scud.model.toDto
+import kotlinx.coroutines.flow.map
+import org.springframework.stereotype.Controller
+import org.springframework.web.reactive.function.server.*
 
-@Component
+@Controller
 class EventHandler(
     private val eventService: EventService
 ) {
 
-    suspend fun queryAllBy(request: ServerRequest): ServerResponse {
-        return try {
-            val limit = request.queryParam("limit").toKtNullable()?.toInt()
-            val offset = request.queryParam("offset").toKtNullable()?.toInt()
+    suspend fun reportSkudEvent(req: ServerRequest): ServerResponse {
+        val rawEvent = req.awaitBody(RawEvent::class)
+        eventService.reportSkudEvent(rawEvent)
 
-            ServerResponse
-                .ok()
-                .bodyAndAwait(eventService.queryAllBy(limit, offset))
+        return ServerResponse
+            .ok()
+            .buildAndAwait()
+    }
 
-        } catch (e: Exception) {
+    suspend fun queryAllBy(req: ServerRequest): ServerResponse {
+        val limit = req.queryParamOrNull("limit")?.toLong()
+        val offset = req.queryParamOrNull("offset")?.toLong()
 
-            ServerResponse
-                .badRequest()
-                .bodyValueAndAwait(e.localizedMessage)
-        }
-
+        return ServerResponse
+            .ok()
+            .bodyAndAwait(eventService.queryAllBy(limit, offset).map { it.toDto() })
     }
 
 }

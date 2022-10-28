@@ -1,5 +1,8 @@
 package com.ithub.bigbrotherbackend.card
 
+import kotlinx.coroutines.flow.Flow
+
+
 interface CardService {
-    suspend fun createCard(card: Card): Card
+    suspend fun findAllCards(): Flow<Card>
 }
