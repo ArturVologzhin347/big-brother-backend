@@ -31,16 +31,19 @@ class DatabaseConfig {
             setConnectionFactory(connectionFactory)
             setPopulatorFromResources(
                 PATH_DROP, // TODO delete path to drop public databases
+                PATH_TYPES,
                 PATH_SCHEMA,
                 PATH_DATA
             )
         }
 
 
-    @Bean(Profiles.PROD)
+    @Bean
+    @Profile(Profiles.PROD)
     fun initializeProd(databaseClient: DatabaseClient, connectionFactory: ConnectionFactory) =
         ConnectionFactoryInitializer().apply {
             setConnectionFactory(connectionFactory)
+            setPopulatorFromResources(PATH_TYPES)
             setPopulatorFromResources(PATH_SCHEMA)
         }
 
@@ -49,6 +52,7 @@ class DatabaseConfig {
         private const val PATH_SQL = "sql"
 
         private const val PATH_SCHEMA = "$PATH_SQL/schema.sql"
+        private const val PATH_TYPES = "$PATH_SQL/types.sql"
         private const val PATH_DATA = "$PATH_SQL/data.sql"
         private const val PATH_DROP = "$PATH_SQL/drop.sql"
 

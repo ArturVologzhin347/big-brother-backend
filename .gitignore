@@ -1,5 +1,5 @@
 dev
-logs.log
+logs/
 src/main/resources/application-dev.properties
 
 HELP.md
