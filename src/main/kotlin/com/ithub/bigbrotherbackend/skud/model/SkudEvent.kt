@@ -1,12 +1,12 @@
-package com.ithub.bigbrotherbackend.event.scud.model
+package com.ithub.bigbrotherbackend.skud.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table(name = "event")
-data class Event(
+@Table(name = "skud_event")
+data class SkudEvent(
 
     @Id
     @Column("id")

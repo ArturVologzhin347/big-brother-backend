@@ -20,7 +20,13 @@ class DatabaseConfig {
     @Bean
     fun databaseClient(connectionFactory: ConnectionFactory) = DatabaseClient.builder().apply {
         it.connectionFactory(connectionFactory)
-        it.bindMarkers { BindMarkersFactory.named(":", "", 50).create() }
+        it.bindMarkers {
+            BindMarkersFactory.named(
+                MARKER_PREFIX,
+                MARKER_NAME_PREFIX,
+                MARKER_MAX_LENGTH
+            ).create()
+        }
         it.namedParameters(true)
     }.build()
 
@@ -37,14 +43,15 @@ class DatabaseConfig {
             )
         }
 
-
     @Bean
     @Profile(Profiles.PROD)
     fun initializeProd(databaseClient: DatabaseClient, connectionFactory: ConnectionFactory) =
         ConnectionFactoryInitializer().apply {
             setConnectionFactory(connectionFactory)
-            setPopulatorFromResources(PATH_TYPES)
-            setPopulatorFromResources(PATH_SCHEMA)
+            setPopulatorFromResources(
+                PATH_TYPES,
+                PATH_SCHEMA
+            )
         }
 
 
@@ -56,5 +63,10 @@ class DatabaseConfig {
         private const val PATH_DATA = "$PATH_SQL/data.sql"
         private const val PATH_DROP = "$PATH_SQL/drop.sql"
 
+        private const val MARKER_PREFIX = ":"
+        private const val MARKER_NAME_PREFIX = ""
+        private const val MARKER_MAX_LENGTH = 32
+
     }
+
 }
