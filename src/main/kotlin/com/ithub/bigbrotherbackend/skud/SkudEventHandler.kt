@@ -22,13 +22,10 @@ class SkudEventHandler(
         val limit = req.queryParamOrNull("limit")?.toLong()
         val offset = req.queryParamOrNull("offset")?.toLong()
 
-        println("123")
-
+        val events = skudEventService.queryAllSkudEvents(limit, offset)
         return ServerResponse
             .ok()
-            .bodyAndAwait(skudEventService.queryAllSkudEvents(limit, offset).also {
-                skudEventService.convertToDto(it)
-            })
+            .bodyAndAwait(skudEventService.convertToDto(events))
     }
 
 }
