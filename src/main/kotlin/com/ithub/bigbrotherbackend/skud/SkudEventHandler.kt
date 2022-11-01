@@ -1,6 +1,7 @@
 package com.ithub.bigbrotherbackend.skud
 
 import com.ithub.bigbrotherbackend.event.RawEvent
+import com.ithub.bigbrotherbackend.util.getPaginationParams
 import org.springframework.stereotype.Controller
 import org.springframework.web.reactive.function.server.*
 
@@ -19,16 +20,18 @@ class SkudEventHandler(
     }
 
     suspend fun queryAllSkudEvents(req: ServerRequest): ServerResponse {
-        val limit = req.queryParamOrNull("limit")?.toLong()
-        val offset = req.queryParamOrNull("offset")?.toLong()
-
-        println("123")
+        val limitAndOffset = req.getPaginationParams()
 
         return ServerResponse
             .ok()
-            .bodyAndAwait(skudEventService.queryAllSkudEvents(limit, offset).also {
-                skudEventService.convertToDto(it)
-            })
+            .bodyAndAwait(
+                skudEventService.convertToDto(
+                    skudEventService.queryAllSkudEvents(
+                        limit = limitAndOffset.first,
+                        offset = limitAndOffset.second
+                    )
+                )
+            )
     }
 
 }
