@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS skud_event
 
 CREATE TABLE IF NOT EXISTS student
 (
-    id         BIGSERIAL PRIMARY KEY,
+    id         VARCHAR(8) PRIMARY KEY,
     name       VARCHAR(128) NOT NULL,
     surname    VARCHAR(128) NOT NULL,
     patronymic VARCHAR(128) NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS respondent
     surname      VARCHAR(128) NOT NULL,
     patronymic   VARCHAR(128) NOT NULL,
     phone_number TEXT         NOT NULL,
-    student_id   BIGINT DEFAULT NULL,
+    student_id   VARCHAR(8) DEFAULT NULL,
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE SET NULL
 );
 

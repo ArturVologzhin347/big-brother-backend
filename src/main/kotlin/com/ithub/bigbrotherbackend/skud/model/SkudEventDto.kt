@@ -1,29 +1,33 @@
 package com.ithub.bigbrotherbackend.skud.model
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
-import java.time.LocalDateTime
+import com.ithub.bigbrotherbackend.student.model.Student
+import com.ithub.bigbrotherbackend.student.model.StudentDto
+import com.ithub.bigbrotherbackend.util.toLong
 
 data class SkudEventDto(
 
     @JsonProperty("id")
     val id: Long,
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss") // TODO
     @JsonProperty("timestamp")
-    val timestamp: LocalDateTime,
+    val timestamp: Long,
 
     @JsonProperty("type")
     val type: String,
 
-    @JsonProperty("card_id")
-    val cardId: Long? = null
+    @JsonProperty("cardId")
+    val cardId: Long,
+
+    @JsonProperty("student")
+    val student: StudentDto? = null
 
 )
 
-fun SkudEvent.toDto() = SkudEventDto(
+fun SkudEvent.toDto(student: StudentDto? = null) = SkudEventDto(
     id = id(),
-    timestamp = timestamp,
+    timestamp = timestamp.toLong(),
     type = type.name,
-    cardId = cardId
+    cardId = cardId,
+    student = student
 )

@@ -1,5 +1,6 @@
 package com.ithub.bigbrotherbackend.student
 
+import com.ithub.bigbrotherbackend.student.model.Student
 import kotlinx.coroutines.flow.Flow
 import org.springframework.stereotype.Service
 

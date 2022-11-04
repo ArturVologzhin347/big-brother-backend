@@ -1,4 +1,4 @@
-package com.ithub.bigbrotherbackend.student
+package com.ithub.bigbrotherbackend.student.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
@@ -9,7 +9,7 @@ data class Student(
 
     @Id
     @Column("id")
-    private val _id: Long? = null,
+    val id: String,
 
     @Column("name")
     val name: String,
@@ -23,8 +23,4 @@ data class Student(
     @Column("card_id")
     val cardId: Long? = null
 
-) {
-
-    fun id() = checkNotNull(_id)
-
-}
+)
