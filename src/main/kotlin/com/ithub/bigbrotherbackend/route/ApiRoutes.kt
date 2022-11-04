@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.server.coRouter
 @Configuration
 class ApiRoutes(
     private val skudEventHandler: SkudEventHandler
-
 ) {
 
     @Bean
@@ -17,8 +16,11 @@ class ApiRoutes(
         (accept(MediaType.APPLICATION_JSON) and "api/").nest {
 
             "skud".nest {
-                POST("/", skudEventHandler::sendSkudEvent)
-                GET("/", skudEventHandler::queryAllSkudEvents)
+                POST("", skudEventHandler::handleSkudEvent)
+            }
+
+            "admin".nest {
+                GET("", skudEventHandler::findAll)
             }
 
         }
