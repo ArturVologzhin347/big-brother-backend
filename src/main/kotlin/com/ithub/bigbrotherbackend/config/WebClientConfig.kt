@@ -1,8 +1,5 @@
 package com.ithub.bigbrotherbackend.config
 
-import io.netty.channel.ChannelOption
-import io.netty.handler.timeout.ReadTimeoutHandler
-import io.netty.handler.timeout.WriteTimeoutHandler
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -12,9 +9,9 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.netty.http.client.HttpClient
 
 @Configuration
-class WebClientConfig(
-    private val env: Environment
-) {
+class WebClientConfig(env: Environment) {
+
+    private val TELEGRAM_API_URL = env.getRequiredProperty(ENV_API_TELEGRAM_URL)
 
 //    @Bean
 //    fun tcpClient() = TcpClient
@@ -25,20 +22,13 @@ class WebClientConfig(
 //            connection.addHandlerLast(WriteTimeoutHandler(TCP_TIMEOUT, TimeUnit.MILLISECONDS))
 //        }
 
-    // TODO http client configuration
-
-    @Bean
+    @Bean  // TODO http client configuration
     fun httpClient(): HttpClient = HttpClient.create()
 
     @Bean
     @Qualifier(QUALIFIER_WEB_CLIENT_TELEGRAM)
     fun webClientTelegram(httpClient: HttpClient) = WebClient.builder().apply {
-
-        val baseUrl = env.getProperty(ENV_API_TELEGRAM_URL)
-            ?: throw NullPointerException("No value with key $ENV_API_TELEGRAM_URL")
-
-        it.baseUrl(baseUrl)
-
+        it.baseUrl(TELEGRAM_API_URL)
         it.clientConnector(ReactorClientHttpConnector(httpClient))
 
     }.build()
@@ -48,7 +38,6 @@ class WebClientConfig(
 //        const val TCP_TIMEOUT = 1000L
 
         const val ENV_API_TELEGRAM_URL = "api.telegram.url"
-
         const val QUALIFIER_WEB_CLIENT_TELEGRAM = "webClientTelegram"
 
     }

@@ -2,8 +2,10 @@ package com.ithub.bigbrotherbackend.telegram.model
 
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Table
 
-data class Telegram(
+@Table(name = "telegram_client")
+data class TelegramClient(
 
     @Id
     @Column("id")
