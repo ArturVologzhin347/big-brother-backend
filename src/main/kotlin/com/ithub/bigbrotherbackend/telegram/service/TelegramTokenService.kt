@@ -18,19 +18,7 @@ class TelegramTokenService(
         clientId: Long,
         phoneNumber: String
     ): TelegramAuthToken {
-
-        val token = authTokenRepository.create(
-            telegramClientId = clientId,
-            code = codeGenerator.generateCode()
-        )
-
-        logger.error(token.code)
-        println(token)
-
-        // TODO send sms with code by phoneNumber
-
-        return token
-
+        TODO()
     }
 
 }

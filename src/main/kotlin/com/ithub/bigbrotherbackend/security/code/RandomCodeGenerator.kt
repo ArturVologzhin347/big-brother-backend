@@ -16,8 +16,12 @@ class RandomCodeGenerator(env: Environment) {
             .split(',')
             .map { CodeIncludes.valueOf(it) }
             .toSet()
-    }
 
+        check(codeIncludes.isNotEmpty()) {
+            "You should add security.code.includes in .properties; Example: " +
+                    "\"security.code.includes=NUMBERS,LETTERS_LOWERCASE,LETTERS_UPPERCASE\""
+        }
+    }
 
     fun generateCode() = generateCode(
         codeIncludes.map { it.source }.reduce { acc, source -> acc + source },

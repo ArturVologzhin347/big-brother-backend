@@ -39,7 +39,9 @@ class DatabaseConfig {
                 PATH_DROP, // TODO delete path to drop public databases
                 PATH_TYPES,
                 PATH_SCHEMA,
+                PATH_SCHEMA_SKUD,
                 PATH_SCHEMA_TELEGRAM,
+                PATH_SCHEMA_SMS,
                 PATH_DATA
             )
         }
@@ -52,7 +54,9 @@ class DatabaseConfig {
             setPopulatorFromResources(
                 PATH_TYPES,
                 PATH_SCHEMA,
-                PATH_SCHEMA_TELEGRAM
+                PATH_SCHEMA_SKUD,
+                PATH_SCHEMA_TELEGRAM,
+                PATH_SCHEMA_SMS
             )
         }
 
@@ -61,7 +65,9 @@ class DatabaseConfig {
         private const val PATH_SQL = "sql"
 
         private const val PATH_SCHEMA = "$PATH_SQL/schema.sql"
+        private const val PATH_SCHEMA_SKUD = "$PATH_SQL/schema_skud.sql"
         private const val PATH_SCHEMA_TELEGRAM = "$PATH_SQL/schema_telegram.sql"
+        private const val PATH_SCHEMA_SMS = "$PATH_SQL/schema_sms.sql"
         private const val PATH_TYPES = "$PATH_SQL/types.sql"
         private const val PATH_DATA = "$PATH_SQL/data.sql"
         private const val PATH_DROP = "$PATH_SQL/drop.sql"

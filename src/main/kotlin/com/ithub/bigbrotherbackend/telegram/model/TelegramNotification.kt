@@ -5,24 +5,29 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
-@Table(name = "telegram_client")
-data class TelegramClient(
+@Table(name = "telegram_notification")
+data class TelegramNotification(
 
     @Id
     @Column("id")
     private val _id: Long? = null,
 
-    @Column("chat")
-    val chat: Long,
+    @Column("type")
+    val type: Type,
 
-    @Column("verified")
-    val verified: Boolean = false,
+    @Column("payload")
+    val payload: String,
 
-    @Column("respondent_id")
-    val respondentId: Long
+    @Column("telegram_client_id")
+    val telegramClientId: Long
 
 ) : Entity<Long> {
 
     override fun id() = checkNotNull(_id)
+
+    enum class Type {
+        SKUD_EVENT,
+
+    }
 
 }
