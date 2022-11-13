@@ -2,6 +2,8 @@ package com.ithub.bigbrotherbackend.telegram.origin
 
 sealed class TelegramResult {
 
+    class TelegramFailureException(val failure: Failure) : Exception(failure.message)
+
     class Failure(
         val code: FailureCode,
         val message: String

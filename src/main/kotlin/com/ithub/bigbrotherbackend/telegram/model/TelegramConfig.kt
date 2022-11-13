@@ -16,7 +16,7 @@ data class TelegramConfig(
     val clientId: Long,
 
     @Column("skud_enabled")
-    val skudEnabled: Boolean
+    val skudEnabled: Boolean = true,
 
 ): Entity<Long> {
     override fun id() = checkNotNull(_id)

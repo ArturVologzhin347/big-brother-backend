@@ -9,10 +9,10 @@ import reactor.core.publisher.Mono
 interface TelegramClientRepository : CoroutineCrudRepository<TelegramClient, Long>,
     BaseNotificationClientRepository<TelegramClient> {
 
-    @Query("SELECT * FROM telegram_client WHERE chat_id=:chatId")
-    fun findByChatId(chatId: Long): Mono<TelegramClient?>
+    @Query("SELECT * FROM telegram_client WHERE chat=:?")
+    fun findByChatId(chatId: Long): Mono<TelegramClient>
 
-    @Query("SELECT * FROM telegram_client WHERE respondent_id=:id")
+    @Query("SELECT * FROM telegram_client WHERE respondent_id=:?")
     override fun findByRespondentId(id: Long): Mono<TelegramClient>
 
 }
