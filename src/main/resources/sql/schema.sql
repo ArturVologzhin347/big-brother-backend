@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS skud_event
 (
     id         BIGSERIAL PRIMARY KEY,
     type       TEXT       NOT NULL,
-    student_id VARCHAR(8) NOT NULL,
     timestamp  TIMESTAMP  NOT NULL,
+    student_id VARCHAR(8) NOT NULL,
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE
 );
