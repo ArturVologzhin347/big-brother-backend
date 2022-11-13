@@ -1,5 +1,6 @@
 package com.ithub.bigbrotherbackend.skud
 
+import com.ithub.bigbrotherbackend.notification.NotificationService
 import com.ithub.bigbrotherbackend.skud.model.RawSkudEvent
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
 import com.ithub.bigbrotherbackend.skud.model.SkudEventDto
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Service
 class SkudEventService(
     private val skudEventRepository: SkudEventRepository,
     private val skudEventTransformer: SkudEventTransformer,
-    private val studentRepository: StudentRepository
+    private val studentRepository: StudentRepository,
+    private val notificationService: NotificationService
 ) {
 
     suspend fun findAll(
@@ -32,12 +34,17 @@ class SkudEventService(
 
     suspend fun handleEvent(rawSkudEvent: RawSkudEvent): SkudEvent {
         return skudEventRepository.save(skudEventTransformer.transform(rawSkudEvent)).apply {
-            // TODO?
+            notificationService.skudEventNotify(buildDto(this))
         }
     }
 
     suspend fun buildDto(skudEvents: Flow<SkudEvent>): Flow<SkudEventDto> {
-        return skudEvents.map { it.toDto(studentRepository.findByCardId(it.cardId).awaitSingleOrNull()?.toDto()) }
+        return skudEvents.map { buildDto(it) }
+    }
+
+    suspend fun buildDto(skudEvent: SkudEvent): SkudEventDto {
+        val student = studentRepository.findByCardId(skudEvent.cardId).awaitSingleOrNull()?.toDto()
+        return skudEvent.toDto(student)
     }
 
 }

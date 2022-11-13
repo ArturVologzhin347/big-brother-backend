@@ -24,7 +24,7 @@ data class Respondent(
     val phoneNumber: String,
 
     @Column("student_id")
-    val studentId: Long? = null
+    val studentId: String? = null
 
 ) {
 

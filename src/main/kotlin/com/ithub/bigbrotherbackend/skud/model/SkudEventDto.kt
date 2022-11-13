@@ -1,7 +1,6 @@
 package com.ithub.bigbrotherbackend.skud.model
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.ithub.bigbrotherbackend.student.model.Student
 import com.ithub.bigbrotherbackend.student.model.StudentDto
 import com.ithub.bigbrotherbackend.util.toLong
 
