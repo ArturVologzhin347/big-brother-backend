@@ -10,8 +10,7 @@ class ApiRoutes {
 
 //    @Bean
 //    fun route() = coRouter {
-//        (accept(MediaType.APPLICATION_JSON) and "api/").nest {
-//
+//        (accept(MediaType.APPLICATION_JSON) and "/api").nest {
 //
 //        }
 //    }
