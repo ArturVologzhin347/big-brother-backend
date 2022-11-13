@@ -1,8 +1,15 @@
 package com.ithub.bigbrotherbackend.student
 
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class StudentService {
+class StudentService(
+    private val studentRepository: StudentRepository
+) {
+
+    suspend fun findByCardId(id: Long): Student? {
+        return studentRepository.findByCardId(id).awaitSingleOrNull()
+    }
 
 }
