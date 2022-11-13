@@ -1,4 +1,4 @@
-package com.ithub.bigbrotherbackend.error
+package com.ithub.bigbrotherbackend.error.dto
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonInclude

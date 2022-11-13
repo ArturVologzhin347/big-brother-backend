@@ -2,6 +2,7 @@ package com.ithub.bigbrotherbackend.error
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.ithub.bigbrotherbackend.Profiles
+import com.ithub.bigbrotherbackend.error.dto.GlobalApiException
 import com.ithub.bigbrotherbackend.error.model.ApiException
 import com.ithub.bigbrotherbackend.util.loggerFactory
 import com.ithub.bigbrotherbackend.util.profileIsActive
