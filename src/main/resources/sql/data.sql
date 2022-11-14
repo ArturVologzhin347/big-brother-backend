@@ -11,4 +11,4 @@ INSERT INTO respondent_config (respondent_id)
 VALUES (1);
 
 INSERT INTO students_respondents (student_id, respondent_id)
-VALUES (1, 1);
+VALUES ('i21s610', 1);

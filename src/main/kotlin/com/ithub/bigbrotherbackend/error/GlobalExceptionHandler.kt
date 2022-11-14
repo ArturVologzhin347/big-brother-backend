@@ -14,6 +14,7 @@ import org.springframework.core.io.buffer.DataBuffer
 import org.springframework.core.io.buffer.DataBufferFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
+import org.springframework.web.server.ResponseStatusException
 import org.springframework.web.server.ServerWebExchange
 import reactor.core.publisher.Mono
 
@@ -35,6 +36,12 @@ class GlobalExceptionHandler(
 
         val exception = when (ex) {
             is ApiException -> ex.toGlobalException(env)
+            is ResponseStatusException -> GlobalApiException(
+                code = ex.status.name,
+                message = ex.message,
+                httpStatus = ex.status,
+                trace = null
+            )
             else -> ApiException(ex).toGlobalException(env)
         }
 
@@ -47,7 +54,7 @@ class GlobalExceptionHandler(
 
         response.statusCode = exception.httpStatus
         val dataBuffer: DataBuffer = bufferFactory.wrap(objectMapper.writeValueAsBytes(exception))
-        return exchange.response.writeWith(Mono.just(dataBuffer))
+        return response.writeWith(Mono.just(dataBuffer))
     }
 
     private fun ApiException.toGlobalException(env: Environment) = GlobalApiException(
