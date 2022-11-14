@@ -11,15 +11,13 @@ class StudentHandler(
     private val studentService: StudentService
 ) : BaseHandler() {
 
-
     fun queryAll() = handle(
         awaitRequest = { serverRequest -> object : BaseRequest(serverRequest) {} },
-        handler = { _ ->
+        handler = {
             ServerResponse
                 .ok()
                 .bodyAndAwait(studentService.queryAll())
         }
     )
-
 
 }

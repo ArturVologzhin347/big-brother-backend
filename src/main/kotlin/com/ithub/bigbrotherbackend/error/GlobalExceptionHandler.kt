@@ -54,7 +54,7 @@ class GlobalExceptionHandler(
 
         response.statusCode = exception.httpStatus
         val dataBuffer: DataBuffer = bufferFactory.wrap(objectMapper.writeValueAsBytes(exception))
-        return exchange.response.writeWith(Mono.just(dataBuffer))
+        return response.writeWith(Mono.just(dataBuffer))
     }
 
     private fun ApiException.toGlobalException(env: Environment) = GlobalApiException(

@@ -30,9 +30,9 @@ class SkudHandler(
                     .ok()
                     .bodyValueAndAwait(
                         skudService.queryAllWithPagination(
-                            studentId,
-                            limit,
-                            offset
+                            studentId = studentId,
+                            limit = limit,
+                            offset = offset
                         )
                     )
             }

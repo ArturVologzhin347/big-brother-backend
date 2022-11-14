@@ -1,6 +1,5 @@
 package com.ithub.bigbrotherbackend.student
 
-import com.ithub.bigbrotherbackend.skud.SkudRepository
 import com.ithub.bigbrotherbackend.skud.SkudService
 import com.ithub.bigbrotherbackend.skud.dto.SkudEventDto
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
@@ -12,15 +11,16 @@ import org.springframework.stereotype.Service
 
 @Service
 class StudentService(
-    private val skudRepository: SkudRepository,
+    private val skudService: SkudService,
     private val studentRepository: StudentRepository,
 ) {
 
+    // TODO cache
     suspend fun queryAll(): Flow<StudentDisplayDto> {
         return studentRepository
             .findAll()
             .map { student ->
-                val event = skudRepository.findLastByStudentId(student.id()).awaitSingleOrNull()
+                val event = skudService.findLast(student.id()).awaitSingleOrNull()
 
                 val status = if (event == null) {
                     StudentDisplayDto.Status.OUT
@@ -38,13 +38,4 @@ class StudentService(
                 )
             }
     }
-
-    suspend fun findByCardId(id: Long): Student? {
-        return studentRepository.findByCardId(id).awaitSingleOrNull()
-    }
-
-    suspend fun findById(id: String): Student? {
-        return studentRepository.findById(id)
-    }
-
 }
