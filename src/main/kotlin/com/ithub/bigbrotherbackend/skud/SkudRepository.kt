@@ -17,4 +17,7 @@ interface SkudRepository : CoroutineCrudRepository<SkudEvent, Long> {
     @Query("SELECT COUNT(*) FROM skud_event WHERE student_id=:?")
     fun countAllByStudentId(studentId: String): Mono<Long>
 
+    @Query("SELECT * FROM skud_event  WHERE student_id=:? ORDER BY timestamp DESC LIMIT 1")
+    fun findLastByStudentId(studentId: String): Mono<SkudEvent>
+
 }

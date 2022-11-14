@@ -1,7 +1,7 @@
 package com.ithub.bigbrotherbackend.skud
 
 import com.ithub.bigbrotherbackend.card.CardService
-import com.ithub.bigbrotherbackend.skud.dto.SkudEventDto
+import com.ithub.bigbrotherbackend.skud.dto.SkudEventDisplayDto
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
 import com.ithub.bigbrotherbackend.student.StudentService
 import com.ithub.bigbrotherbackend.student.dto.StudentDto
@@ -10,14 +10,12 @@ import com.ithub.bigbrotherbackend.util.await
 import com.ithub.bigbrotherbackend.util.loggerFactory
 import com.ithub.bigbrotherbackend.util.toLocalDateTime
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.drop
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.skip
 import kotlinx.coroutines.reactor.awaitSingle
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 
@@ -34,8 +32,8 @@ class SkudService(
         studentId: String?,
         limit: Int,
         offset: Int
-    ): Page<SkudEventDto> {
-        val events = queryAll(studentId, limit, offset).toDto().await()
+    ): Page<SkudEventDisplayDto> {
+        val events = queryAll(studentId, limit, offset).toDisplayedDto().await()
         val total = countAll(studentId)
         return PageImpl(events, PageRequest.of(offset, limit), total)
     }
@@ -61,14 +59,18 @@ class SkudService(
 
     }
 
-    suspend fun Flow<SkudEvent>.toDto(): Flow<SkudEventDto> {
+    suspend fun Flow<SkudEvent>.toDisplayedDto(): Flow<SkudEventDisplayDto> {
         return map {
             val student = StudentDto.from(
                 studentService.findById(it.studentId)
                     ?: apiError("Student cannot be null")
             )
-            SkudEventDto.from(it, student)
+            SkudEventDisplayDto.from(it, student)
         }
+    }
+
+    suspend fun getLastByStudentId(studentId: String): SkudEvent? {
+        return skudRepository.findLastByStudentId(studentId).awaitSingleOrNull()
     }
 
     suspend fun acceptSkudEvent(
