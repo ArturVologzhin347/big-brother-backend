@@ -49,3 +49,8 @@ CREATE TABLE IF NOT EXISTS skud_event
     student_id VARCHAR(8) NOT NULL,
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS telegram_client
+(
+
+);

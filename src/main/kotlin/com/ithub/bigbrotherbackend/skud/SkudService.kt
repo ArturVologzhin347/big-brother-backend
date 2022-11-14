@@ -1,6 +1,7 @@
 package com.ithub.bigbrotherbackend.skud
 
 import com.ithub.bigbrotherbackend.card.CardService
+import com.ithub.bigbrotherbackend.notification.NotificationService
 import com.ithub.bigbrotherbackend.skud.dto.SkudEventDisplayDto
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
 import com.ithub.bigbrotherbackend.student.StudentRepository
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono
 @Service
 class SkudService(
     private val cardService: CardService,
+    private val notificationService: NotificationService,
     private val studentRepository: StudentRepository,
     private val skudRepository: SkudRepository,
     cache: CacheManager
@@ -107,8 +109,7 @@ class SkudService(
 
     protected suspend fun sendEventToNotificationChannels(event: SkudEvent) {
         cacheLastEvents.evict(event.studentId)
-        logger.debug(event.toString())
-
-        // TODO notification channels implementation
+        notificationService.sendSkudEvent(event)
     }
+
 }

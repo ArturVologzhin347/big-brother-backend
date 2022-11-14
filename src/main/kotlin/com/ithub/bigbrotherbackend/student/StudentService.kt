@@ -14,7 +14,6 @@ class StudentService(
     private val skudService: SkudService,
     private val studentRepository: StudentRepository,
 ) {
-
     suspend fun queryAll(): Flow<StudentDisplayDto> {
         return studentRepository
             .findAll()
