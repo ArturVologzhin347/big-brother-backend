@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS respondent
     phone_number TEXT         NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS students_respondents
+CREATE TABLE IF NOT EXISTS student_respondent
 (
     id            BIGSERIAL PRIMARY KEY,
     student_id    VARCHAR(8) NOT NULL,
