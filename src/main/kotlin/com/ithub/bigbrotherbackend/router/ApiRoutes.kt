@@ -19,6 +19,10 @@ class ApiRoutes(
                 POST("", skudHandler.acceptSkudEvent())
             }
 
+            "/admin".nest {
+                GET("", skudHandler.queryAll())
+            }
+
         }
     }
 

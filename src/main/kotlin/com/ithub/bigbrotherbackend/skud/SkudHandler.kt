@@ -5,14 +5,39 @@ import com.ithub.bigbrotherbackend.base.hanlder.BaseRequest
 import com.ithub.bigbrotherbackend.skud.body.AcceptSkudEventBody
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
 import org.springframework.stereotype.Controller
-import org.springframework.web.reactive.function.server.ServerResponse
-import org.springframework.web.reactive.function.server.awaitBody
-import org.springframework.web.reactive.function.server.bodyValueAndAwait
+import org.springframework.web.reactive.function.server.*
 
 @Controller
 class SkudHandler(
     private val skudService: SkudService
 ) : BaseHandler() {
+
+    fun queryAll() = handle(
+        awaitRequest = { serverRequest ->
+            val studentId = serverRequest.queryParamOrNull("student")
+            val limit = serverRequest.queryParamOrNull("limit")?.toInt()
+            val offset = serverRequest.queryParamOrNull("offset")?.toInt()
+
+            object : BaseRequest(serverRequest) {
+                val studentId: String? = studentId
+                val limit: Int = limit ?: 10
+                val offset: Int = offset ?: 0
+            }
+        },
+        handler = { request ->
+            with(request) {
+                ServerResponse
+                    .ok()
+                    .bodyValueAndAwait(
+                        skudService.queryAllWithPagination(
+                            studentId,
+                            limit,
+                            offset
+                        )
+                    )
+            }
+        }
+    )
 
     fun acceptSkudEvent() = handle(
         awaitRequest = { serverRequest ->

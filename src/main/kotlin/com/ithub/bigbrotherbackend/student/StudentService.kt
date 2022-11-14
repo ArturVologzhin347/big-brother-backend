@@ -12,4 +12,8 @@ class StudentService(
         return studentRepository.findByCardId(id).awaitSingleOrNull()
     }
 
+    suspend fun findById(id: String): Student? {
+        return studentRepository.findById(id)
+    }
+
 }
