@@ -15,27 +15,34 @@ class StudentService(
     private val studentRepository: StudentRepository,
 ) {
 
-    // TODO cache
     suspend fun queryAll(): Flow<StudentDisplayDto> {
         return studentRepository
             .findAll()
-            .map { student ->
-                val event = skudService.findLast(student.id()).awaitSingleOrNull()
-
-                val status = if (event == null) {
-                    StudentDisplayDto.Status.OUT
-                } else {
-                    when (event.type) {
-                        SkudEvent.Type.ENTER -> StudentDisplayDto.Status.IN
-                        SkudEvent.Type.EXIT -> StudentDisplayDto.Status.OUT
-                    }
-                }
-
-                StudentDisplayDto.from(
-                    student = student,
-                    event = event?.let { SkudEventDto.from(it) },
-                    status = status
-                )
-            }
+            .map { student -> queryOne(student.id()) }
     }
+
+    suspend fun queryOne(id: String): StudentDisplayDto {
+        val student = studentRepository.findById(id)
+            ?: throw NullPointerException("Student with id $id not found.")
+
+        val event = skudService
+            .findLast(id)
+            .awaitSingleOrNull()
+
+        val status = if (event == null) {
+            StudentDisplayDto.Status.OUT
+        } else {
+            when (event.type) {
+                SkudEvent.Type.ENTER -> StudentDisplayDto.Status.IN
+                SkudEvent.Type.EXIT -> StudentDisplayDto.Status.OUT
+            }
+        }
+
+        return StudentDisplayDto.from(
+            student = student,
+            event = event?.let { SkudEventDto.from(it) },
+            status = status
+        )
+    }
+
 }

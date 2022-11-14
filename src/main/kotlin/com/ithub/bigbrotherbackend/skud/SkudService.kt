@@ -5,15 +5,12 @@ import com.ithub.bigbrotherbackend.skud.dto.SkudEventDisplayDto
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
 import com.ithub.bigbrotherbackend.student.StudentRepository
 import com.ithub.bigbrotherbackend.student.dto.StudentDto
-import com.ithub.bigbrotherbackend.util.apiError
-import com.ithub.bigbrotherbackend.util.await
-import com.ithub.bigbrotherbackend.util.loggerFactory
-import com.ithub.bigbrotherbackend.util.toLocalDateTime
+import com.ithub.bigbrotherbackend.util.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
-import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -23,17 +20,19 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-open class SkudService(
+class SkudService(
     private val cardService: CardService,
     private val studentRepository: StudentRepository,
-    private val skudRepository: SkudRepository
+    private val skudRepository: SkudRepository,
+    cache: CacheManager
 ) {
 
     private val logger by loggerFactory()
+    private val cacheLastEvents by cache.cached("last_events")
 
-    @Cacheable("last_skud_events", key = "#studentId")
+    @Cacheable("last_events", key = "#studentId")
     fun findLast(studentId: String): Mono<SkudEvent> {
-        return skudRepository.findLastByStudentId(studentId).cache()
+        return skudRepository.findLastBy(studentId).cache()
     }
 
     suspend fun queryAllWithPagination(
@@ -41,12 +40,12 @@ open class SkudService(
         limit: Int,
         offset: Int
     ): Page<SkudEventDisplayDto> {
-        val events = queryAll(studentId, limit, offset).toDisplayedDto().await()
-        val total = countAll(studentId)
+        val events = queryAllBy(studentId, limit, offset).toDisplayedDto().await()
+        val total = countAllBy(studentId)
         return PageImpl(events, PageRequest.of(offset, limit), total)
     }
 
-    suspend fun queryAll(
+    suspend fun queryAllBy(
         studentId: String?,
         limit: Int,
         offset: Int
@@ -54,15 +53,15 @@ open class SkudService(
         return if (studentId == null) {
             skudRepository.queryAll(limit, offset)
         } else {
-            skudRepository.queryAllByStudentId(studentId, limit, offset)
+            skudRepository.queryAllBy(studentId, limit, offset)
         }
     }
 
-    suspend fun countAll(studentId: String?): Long {
+    suspend fun countAllBy(studentId: String?): Long {
         return if (studentId == null) {
             skudRepository.count()
         } else {
-            skudRepository.countAllByStudentId(studentId).awaitSingle()
+            skudRepository.countAllBy(studentId).awaitSingle()
         }
     }
 
@@ -74,7 +73,6 @@ open class SkudService(
             SkudEventDisplayDto.from(it, student)
         }
     }
-
 
     suspend fun acceptSkudEvent(
         cardNumber: String,
@@ -88,7 +86,9 @@ open class SkudService(
             status = HttpStatus.NOT_FOUND
         )
 
-        val student = studentRepository.findByCardId(card.id()).awaitSingleOrNull() ?: apiError(
+        val student = studentRepository
+            .findByCardId(card.id())
+            .awaitSingleOrNull() ?: apiError(
             message = "Not associated student with card $card",
             code = "STUDENT_NOT_EXISTS",
             status = HttpStatus.NOT_FOUND
@@ -105,9 +105,10 @@ open class SkudService(
         sendEventToNotificationChannels(skudEvent)
     }
 
-    @CacheEvict("last_skud_events", beforeInvocation = true)
     protected suspend fun sendEventToNotificationChannels(event: SkudEvent) {
+        cacheLastEvents.evict(event.studentId)
         logger.debug(event.toString())
+
         // TODO notification channels implementation
     }
 }
