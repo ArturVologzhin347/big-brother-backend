@@ -29,9 +29,9 @@ def fetch(number, type: EventType, timestamp):
     })
     
     if(r.status_code == 200):
-        print(f'SUCCESS number: ${number}, type: ${type}, timestamp: ${timestamp}')
+        print(f'SUCCESS number: {number}, type: {type}, timestamp: {timestamp}')
     else:
-        print(f'FAILURE: status: ${r.status_code}, message: ${r.json}')
+        print(f'FAILURE: status: {r.status_code}, message: {r.json}')
         
 
 if __name__ == '__main__':
