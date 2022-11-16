@@ -37,6 +37,7 @@ class DatabaseConfig {
             setPopulatorFromResources(
                 PATH_DROP, // TODO delete path to drop public databases
                 PATH_SCHEMA,
+                PATH_SCHEMA_TELEGRAM,
                 PATH_DATA
             )
         }
@@ -48,6 +49,7 @@ class DatabaseConfig {
             setConnectionFactory(connectionFactory)
             setPopulatorFromResources(
                 PATH_SCHEMA,
+                PATH_SCHEMA_TELEGRAM
             )
         }
 
@@ -55,6 +57,7 @@ class DatabaseConfig {
         private const val PATH_SQL = "sql"
 
         private const val PATH_SCHEMA = "$PATH_SQL/schema.sql"
+        private const val PATH_SCHEMA_TELEGRAM = "$PATH_SQL/schema_telegram.sql"
         private const val PATH_DATA = "$PATH_SQL/data.sql"
         private const val PATH_DROP = "$PATH_SQL/drop.sql"
 

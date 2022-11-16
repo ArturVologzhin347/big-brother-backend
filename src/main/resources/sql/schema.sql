@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS student_respondent
 CREATE TABLE IF NOT EXISTS respondent_config
 (
     id BIGSERIAL PRIMARY KEY,
+    skud_enabled BOOL NOT NULL DEFAULT TRUE,
     respondent_id BIGINT NOT NULL UNIQUE,
     FOREIGN KEY (respondent_id) REFERENCES respondent (id) ON DELETE CASCADE
 );
@@ -48,9 +49,4 @@ CREATE TABLE IF NOT EXISTS skud_event
     timestamp  TIMESTAMP  NOT NULL,
     student_id VARCHAR(8) NOT NULL,
     FOREIGN KEY (student_id) REFERENCES student (id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS telegram_client
-(
-
 );
