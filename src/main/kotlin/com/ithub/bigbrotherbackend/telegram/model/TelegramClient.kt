@@ -1,25 +1,24 @@
-package com.ithub.bigbrotherbackend.respondent.model
+package com.ithub.bigbrotherbackend.telegram.model
 
 import com.ithub.bigbrotherbackend.base.entity.Entity
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 
-@Table(name = "respondent_config")
-data class RespondentConfig(
+@Table(name = "telegram_client")
+data class TelegramClient(
 
     @Id
     @Column("id")
     private val _id: Long? = null,
 
-    @Column("skud_enabled")
-    val skudEnabled: Boolean = true,
+    @Column("chat")
+    val chat: Int,
 
-    @Column("respondent_id")
-    val respondentId: Long
+    @Column("respondent_config_id")
+    val configId: Long
 
-
-) : Entity<Long>() {
+): Entity<Long>() {
 
     override fun id() = checkNotNull(_id)
 

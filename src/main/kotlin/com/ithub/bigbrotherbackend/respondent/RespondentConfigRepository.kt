@@ -9,7 +9,7 @@ import reactor.core.publisher.Mono
 @Repository
 interface RespondentConfigRepository : CoroutineCrudRepository<RespondentConfig, Long> {
 
-    @Query("SELECT * FROM respondent_config WHERE respondent_id= :?")
+    @Query("SELECT * FROM respondent_config WHERE respondent_id=:?")
     fun findOneBy(respondentId: Long): Mono<RespondentConfig>
 
 }

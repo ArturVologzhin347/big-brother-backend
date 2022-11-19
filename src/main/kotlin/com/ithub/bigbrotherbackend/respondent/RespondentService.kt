@@ -4,6 +4,7 @@ import com.ithub.bigbrotherbackend.respondent.model.Respondent
 import com.ithub.bigbrotherbackend.respondent.model.RespondentConfig
 import com.ithub.bigbrotherbackend.util.cached
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.cache.CacheManager
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
@@ -29,6 +30,10 @@ class RespondentService(
     @Cacheable("respondent_configs", key = "#respondentId")
     fun findRespondentConfigBy(respondentId: Long): Mono<RespondentConfig> {
         return respondentConfigRepository.findOneBy(respondentId)
+    }
+
+    suspend fun findRespondentBy(phoneNumber: String): Respondent? {
+        return respondentRepository.findRespondentsByPhoneNumber(phoneNumber).awaitSingleOrNull()
     }
 
 }
