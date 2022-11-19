@@ -41,6 +41,11 @@ class ApiRoutes(
                 "/auth".nest {
                     POST("/registration", telegramHandler.registration())
                     POST("/verification", telegramHandler.verification())
+
+                    "/client/{chat}".nest {
+                        GET("/status", telegramHandler.clientStatus())
+                    }
+
                 }
             }
 

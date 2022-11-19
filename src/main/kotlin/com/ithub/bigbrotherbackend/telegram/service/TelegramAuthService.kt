@@ -2,6 +2,7 @@ package com.ithub.bigbrotherbackend.telegram.service
 
 import com.ithub.bigbrotherbackend.respondent.RespondentService
 import com.ithub.bigbrotherbackend.security.code.RandomCodeGenerator
+import com.ithub.bigbrotherbackend.telegram.model.ClientStatus
 import com.ithub.bigbrotherbackend.telegram.model.TelegramClient
 import com.ithub.bigbrotherbackend.telegram.model.TelegramToken
 import com.ithub.bigbrotherbackend.telegram.repository.TelegramClientRepository
@@ -28,6 +29,14 @@ class TelegramAuthService(
     private val logger by loggerFactory()
     private val tokens = hashMapOf<Int, TelegramToken>()
 
+    suspend fun clientStatus(chat: Int): ClientStatus {
+        if(tokens.containsKey(chat)) {
+            return ClientStatus.NOT_VERIFIED
+        }
+
+        return  if(clientService.existsBy(chat)) ClientStatus.REGISTERED else ClientStatus.UNREGISTERED
+    }
+
     suspend fun registration(chat: Int, phoneNumber: String) {
         if (clientService.existsBy(chat)) {
             apiError(
@@ -47,7 +56,6 @@ class TelegramAuthService(
             .findRespondentConfigBy(respondentId = respondent.id())
             .awaitSingle()
 
-
         val code = codeGenerator.generateCode()
         val secretCode = encoder.encode(code)
 
@@ -58,6 +66,7 @@ class TelegramAuthService(
             attempts = 0,
             timestamp = System.currentTimeMillis()
         )
+
 
         logger.debug("Chat: $chat, CODE: <$code>") // TODO send sms with code
 
@@ -116,6 +125,7 @@ class TelegramAuthService(
             )
         )
 
+        tokens.remove(chat)
     }
 
     private fun killToken(chat: Int, errorCode: String = "TOKEN_WAS_KILLED"): Nothing {
