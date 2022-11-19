@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS student_respondent
 CREATE TABLE IF NOT EXISTS respondent_config
 (
     id BIGSERIAL PRIMARY KEY,
+    skud_enabled BOOL NOT NULL DEFAULT TRUE,
     respondent_id BIGINT NOT NULL UNIQUE,
     FOREIGN KEY (respondent_id) REFERENCES respondent (id) ON DELETE CASCADE
 );

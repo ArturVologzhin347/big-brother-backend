@@ -13,7 +13,7 @@ class GlobalApiException(
     val trace: String?
 ) {
 
-    val status: Int = httpStatus.value()
+    private val status: Int = httpStatus.value()
 
     fun pretty(): String {
         return "ERROR - $status; Code: $code; Message: $message"

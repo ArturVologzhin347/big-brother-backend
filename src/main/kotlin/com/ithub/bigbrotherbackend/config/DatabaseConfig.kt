@@ -6,6 +6,7 @@ import io.r2dbc.spi.ConnectionFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
+import org.springframework.data.r2dbc.core.R2dbcEntityTemplate
 import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories
 import org.springframework.r2dbc.connection.init.ConnectionFactoryInitializer
 import org.springframework.r2dbc.core.DatabaseClient
@@ -36,6 +37,7 @@ class DatabaseConfig {
             setPopulatorFromResources(
                 PATH_DROP, // TODO delete path to drop public databases
                 PATH_SCHEMA,
+                PATH_SCHEMA_TELEGRAM,
                 PATH_DATA
             )
         }
@@ -47,14 +49,15 @@ class DatabaseConfig {
             setConnectionFactory(connectionFactory)
             setPopulatorFromResources(
                 PATH_SCHEMA,
+                PATH_SCHEMA_TELEGRAM
             )
         }
-
 
     companion object {
         private const val PATH_SQL = "sql"
 
         private const val PATH_SCHEMA = "$PATH_SQL/schema.sql"
+        private const val PATH_SCHEMA_TELEGRAM = "$PATH_SQL/schema_telegram.sql"
         private const val PATH_DATA = "$PATH_SQL/data.sql"
         private const val PATH_DROP = "$PATH_SQL/drop.sql"
 

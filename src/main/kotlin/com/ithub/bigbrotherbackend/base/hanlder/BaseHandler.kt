@@ -10,20 +10,22 @@ typealias HandlerFunction = suspend (request: ServerRequest) -> ServerResponse
 abstract class BaseHandler {
 
     protected fun <R : BaseRequest> handle(
-        awaitRequest: suspend (serverRequest: ServerRequest) -> R,
+        awaitRequest: (suspend (serverRequest: ServerRequest) -> R),
         handler: suspend (request: R) -> ServerResponse
     ): HandlerFunction {
         return { serverRequest ->
             val request: R = try {
-                awaitRequest(serverRequest)
+                awaitRequest.invoke(serverRequest)
             } catch (e: ApiException) {
                 throw e
             } catch (e: Exception) {
                 throw BadRequestApiException(e.message ?: "no message")
             }
 
-            handler(request)
+            handler.invoke(request)
         }
     }
+
+    protected fun skipAwaitRequest(): (serverRequest: ServerRequest) -> BaseRequest = { object : BaseRequest(it) {} }
 
 }

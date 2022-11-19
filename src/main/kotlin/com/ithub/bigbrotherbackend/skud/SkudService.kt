@@ -1,6 +1,7 @@
 package com.ithub.bigbrotherbackend.skud
 
 import com.ithub.bigbrotherbackend.card.CardService
+import com.ithub.bigbrotherbackend.notification.NotificationService
 import com.ithub.bigbrotherbackend.skud.dto.SkudEventDisplayDto
 import com.ithub.bigbrotherbackend.skud.model.SkudEvent
 import com.ithub.bigbrotherbackend.student.StudentRepository
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono
 @Service
 class SkudService(
     private val cardService: CardService,
+    private val notificationService: NotificationService,
     private val studentRepository: StudentRepository,
     private val skudRepository: SkudRepository,
     cache: CacheManager
@@ -40,7 +42,7 @@ class SkudService(
         limit: Int,
         offset: Int
     ): Page<SkudEventDisplayDto> {
-        val events = queryAllBy(studentId, limit, offset).toDisplayedDto().await()
+        val events = queryAllBy(studentId, limit, offset).toDisplayDto().await()
         val total = countAllBy(studentId)
         return PageImpl(events, PageRequest.of(offset, limit), total)
     }
@@ -65,13 +67,18 @@ class SkudService(
         }
     }
 
-    suspend fun Flow<SkudEvent>.toDisplayedDto(): Flow<SkudEventDisplayDto> {
-        return map {
-            val student = StudentDto.from(
-                studentRepository.findById(it.studentId) ?: apiError("Student cannot be null")
+    suspend fun Flow<SkudEvent>.toDisplayDto(): Flow<SkudEventDisplayDto> {
+        return map { it.toDisplayDto() }
+    }
+
+
+    suspend fun SkudEvent.toDisplayDto(): SkudEventDisplayDto {
+        return SkudEventDisplayDto.from(
+            event = this,
+            student = StudentDto.from(
+                studentRepository.findById(this.studentId) ?: apiError("Student cannot be null")
             )
-            SkudEventDisplayDto.from(it, student)
-        }
+        )
     }
 
     suspend fun acceptSkudEvent(
@@ -107,8 +114,7 @@ class SkudService(
 
     protected suspend fun sendEventToNotificationChannels(event: SkudEvent) {
         cacheLastEvents.evict(event.studentId)
-        logger.debug(event.toString())
-
-        // TODO notification channels implementation
+        notificationService.sendSkudEvent(event.toDisplayDto())
     }
+
 }
