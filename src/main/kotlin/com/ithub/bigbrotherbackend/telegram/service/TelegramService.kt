@@ -55,7 +55,7 @@ class TelegramService(
                     client = client,
                     notification = notification,
                     alreadyBuffered = true,
-                    once = false
+                    once = false,
                 )
             }.collect()
     }

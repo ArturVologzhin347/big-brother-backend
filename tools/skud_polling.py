@@ -12,11 +12,11 @@ class EventType(enum.Enum):
 def main():
     try:
         while True:
-            number = random.choice(['1'])
+            number = random.choice(['1', '2'])
             type = random.choice([EventType.ENTER,EventType.EXIT])
             timestamp = round(time.time() * 1000)
             fetch(number, type, timestamp)
-            time.sleep(1)
+            time.sleep(0.2)
         
     except KeyboardInterrupt:
         print('Interrupted!')

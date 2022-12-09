@@ -27,10 +27,12 @@ class ApiRoutes(
 
                 "/skud".nest {
                     GET("", skudHandler.queryAll())
+                    GET("/last/{timestamp}", skudHandler.queryLast())
                 }
 
                 "/students".nest {
                     GET("", studentHandler.queryAll())
+                    GET("/display", studentHandler.queryDisplayedAll())
                 }
 
             }

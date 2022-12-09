@@ -12,11 +12,20 @@ class StudentHandler(
 ) : BaseHandler() {
 
     fun queryAll() = handle(
-        awaitRequest = { serverRequest -> object : BaseRequest(serverRequest) {} },
+        awaitRequest = skipAwaitRequest(),
         handler = {
             ServerResponse
                 .ok()
                 .bodyAndAwait(studentService.queryAll())
+        }
+    )
+
+    fun queryDisplayedAll() = handle(
+        awaitRequest = skipAwaitRequest(),
+        handler = {
+            ServerResponse
+                .ok()
+                .bodyAndAwait(studentService.queryDisplayedAll())
         }
     )
 
