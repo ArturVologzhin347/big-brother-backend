@@ -23,7 +23,7 @@ class TelegramAuthService(
     private val clientService: TelegramClientService,
     private val clientRepository: TelegramClientRepository,
     private val codeGenerator: RandomCodeGenerator,
-    private val encoder: PasswordEncoder
+    private val encoder: PasswordEncoder,
 ) {
 
     private val logger by loggerFactory()

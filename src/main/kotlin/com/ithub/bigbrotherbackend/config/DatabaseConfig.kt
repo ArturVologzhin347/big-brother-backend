@@ -35,10 +35,10 @@ class DatabaseConfig {
         ConnectionFactoryInitializer().apply {
             setConnectionFactory(connectionFactory)
             setPopulatorFromResources(
-                PATH_DROP, // TODO delete path to drop public databases
+                //PATH_DROP, // TODO delete path to drop public databases
                 PATH_SCHEMA,
                 PATH_SCHEMA_TELEGRAM,
-                PATH_DATA
+                //PATH_DATA
             )
         }
 
